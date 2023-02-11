@@ -24,6 +24,11 @@ export const userCommon = defineStore('usrCommon', {
         },
         setLoginTime(loginTime: number) {
             this.loginTime = loginTime
+        },
+        logout() {
+            this.user = {} as user
+            this.token = ''
+            this.loginTime = 0
         }
     },
     persist: true,

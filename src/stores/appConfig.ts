@@ -7,12 +7,14 @@ export const appConfig = defineStore('appConfig', {
     theme: 'auto',
     collapsed: true, // 侧边栏是否展开
     isMobile: false,
+    menu: [] as string[], // 菜单选择的key
   }),
   getters: {
     getLocale: (state) => state.locale,
     getTheme: (state) => state.theme,
     getcollapsed: (state) => state.collapsed,
     getIsMobile: (state) => state.isMobile,
+    getMenu: (state) => state.menu,
   },
   actions: {
     setLocale(locale: string) {
@@ -26,7 +28,10 @@ export const appConfig = defineStore('appConfig', {
     },
     setIsMobile(isMobile: boolean) {
       this.isMobile = isMobile
-    }
+    },
+    setMenu(menu: string[]) {
+      this.menu = menu
+    },
   },
   persist: true,
 })

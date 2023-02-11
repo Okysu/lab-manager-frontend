@@ -7,13 +7,13 @@ import vaildcode from "@/tools/validcode"
 import request from "@/tools/request"
 // 用户的存储
 import { userCommon } from "@/stores/user"
+import { appConfig } from "@/stores/appConfig"
 // 路由跳转
 import { useRouter } from "vue-router"
-// 引入事件总线
-import { events } from '@/tools/eventBus'
 const router = useRouter()
 // 获取用户的存储
 const u = userCommon()
+const app = appConfig()
 // 表单实例
 const form = ref<FormInst>()
 // 用户登录的value ref
@@ -74,6 +74,7 @@ const login = (e: MouseEvent) => {
     e.preventDefault()
     form.value?.validate(async (errors) => {
         if (errors) {
+            vaild.draw()
             return
         }
         // 发送请求
@@ -94,8 +95,7 @@ const login = (e: MouseEvent) => {
                 description: "欢迎回来！",
                 duration: 2000,
             })
-            //TODO: 路由表
-            router.push("/console/user")
+            router.push({ name: "console" })
         } else {
             window.$notify.error({
                 title: "登录失败",

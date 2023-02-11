@@ -5,23 +5,26 @@ import { NIcon } from 'naive-ui'
 import { appConfig } from '@/stores/appConfig'
 import { userCommon } from '@/stores/user'
 import { storeToRefs } from 'pinia'
-import { RouterView } from 'vue-router'
-import { randomColor } from '@/tools/string'
+import { RouterView, useRouter } from 'vue-router'
+import { randomColor, reverseColor } from '@/tools/string'
+import request from '@/tools/request'
+import Menu from '@/components/menu.vue'
 // 引入事件总线
 import { events } from '@/tools/eventBus'
 import {
   SettingsOutline as SettingsIcon,
+  RefreshOutline as RefreshIcon,
   SunnyOutline as SunnyIcon,
   MoonOutline as MoonIcon,
   TimeOutline as TimeIcon,
   PeopleOutline as PeopleIcon,
-  NotificationsOutline as NotificationIcon,
+  LogOutOutline as LogoutIcon,
 } from '@vicons/ionicons5'
 // 渲染图标
 const renderIcon = (icon: Component) => {
   return () => h(NIcon, null, { default: () => h(icon) })
 }
-
+const router = useRouter()
 const config = appConfig()
 const box = reactive(
   {
@@ -30,7 +33,6 @@ const box = reactive(
   }
 )
 const color = {
-  background: randomColor(),
   color: randomColor(),
 }
 // 挂载后回调
@@ -73,12 +75,30 @@ const popoverMenu = reactive({
       key: 'profile',
       icon: renderIcon(PeopleIcon),
     },
+    // {
+    //   label: '系统设置',
+    //   key: 'settings',
+    //   icon: renderIcon(SettingsIcon),
+    // },
     {
-      label: '系统设置',
-      key: 'settings',
-      icon: renderIcon(SettingsIcon),
+      type: 'divider',
+      key: 'divider',
+    },
+    {
+      label: '退出登录',
+      key: 'logout',
+      icon: renderIcon(LogoutIcon),
     }
   ],
+  update: (v: string) => {
+    if (v === 'logout') {
+      request.post('/user/logout').then(() => {
+        router.push('/')
+        userCommon().logout()
+      })
+    }
+    return
+  }
 })
 
 const changeTheme = (value: string) => {
@@ -98,6 +118,11 @@ const currentTheme = computed(() => {
     return config.theme
   }
 })
+
+// 使用router刷新本页面
+const refresh = () => {
+  router.go(0)
+}
 
 </script>
 
@@ -127,17 +152,16 @@ const currentTheme = computed(() => {
       <div class="header-bar">
         <h2>控制台</h2>
         <div class="header-bar-right">
-          <n-badge :value="2" :max="15">
-            <n-button text style="font-size: 22px;">
-              <n-icon>
-                <NotificationIcon />
-              </n-icon>
-            </n-button></n-badge>
+          <n-button text style="font-size: 22px;" @click="refresh">
+            <n-icon>
+              <RefreshIcon />
+            </n-icon>
+          </n-button>
           <n-popover trigger="hover" style="width: 250px">
             <template #trigger>
               <n-avatar :style="{
                 color: color.color,
-                backgroundColor: color.background
+                backgroundColor: reverseColor(color.color)
               }">
                 {{ user.name[0] }}
               </n-avatar>
@@ -147,7 +171,7 @@ const currentTheme = computed(() => {
                 <template #prefix>
                   <n-avatar :size="48" :style="{
                     color: color.color,
-                    backgroundColor: color.background
+                    backgroundColor: reverseColor(color.color)
                   }">
                     {{ user.name[0] }}
                   </n-avatar>
@@ -156,7 +180,7 @@ const currentTheme = computed(() => {
                 <p>{{ user.name }}</p>
               </n-list-item>
               <n-list-item>
-                <n-menu :options="popoverMenu.menu" :value="null" @update:value="null" />
+                <n-menu :options="popoverMenu.menu" :value="null" @update:value="popoverMenu.update" />
               </n-list-item>
               <n-list-item>
                 <n-button-group class="float-right">
@@ -184,7 +208,7 @@ const currentTheme = computed(() => {
     <n-layout position="absolute" style="top: 64px;" has-sider>
       <n-layout-sider bordered show-trigger collapse-mode="width" :collapsed-width="config.isMobile ? 0 : 64"
         :width="240" :native-scrollbar="false" v-model:collapsed="collapsed" @contextmenu.prevent="">
-        <!-- 这里之后存放menu组件 -->
+        <Menu />
       </n-layout-sider>
       <n-layout content-style="padding: 24px;" :native-scrollbar="false">
         <RouterView />

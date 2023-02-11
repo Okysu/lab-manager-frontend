@@ -4,7 +4,6 @@ import { RouterView } from 'vue-router'
 import {
   zhCN,
   dateZhCN,
-  NConfigProvider,
   enUS,
   dateEnUS,
   lightTheme,
@@ -13,7 +12,7 @@ import {
 // 引入事件总线
 import { events } from '@/tools/eventBus'
 // 引入provider component
-import dialog from '@/components/dialog.vue'
+import Xdialog from '@/components/dialog.vue'
 import notification from './components/notification.vue'
 import message from '@/components/message.vue'
 import loadingBar from '@/components/loadingBar.vue'
@@ -118,7 +117,7 @@ onBeforeUnmount(() => {
     <notification />
   </n-notification-provider>
   <n-dialog-provider>
-    <dialog />
+    <Xdialog />
   </n-dialog-provider>
   <n-loading-bar-provider>
     <loadingBar />

@@ -3,10 +3,11 @@ import ConsoleView from '@/views/ConsoleView.vue'
 
 // 引入userCommon
 import { userCommon } from '@/stores/user'
-import type { Store, PiniaCustomStateProperties } from 'pinia'
-let user: Store<"usrCommon", { user: user; token: string; loginTime: number }, { getUser: (state: { user: { id: number; uid: number; password: string | null; name: string; mail: string; expire: string | null; disabled: number }; token: string; loginTime: number } & PiniaCustomStateProperties<{ user: user; token: string; loginTime: number }>) => { id: number; uid: number; password: string | null; name: string; mail: string; expire: string | null; disabled: number }; getToken: (state: { user: { id: number; uid: number; password: string | null; name: string; mail: string; expire: string | null; disabled: number }; token: string; loginTime: number } & PiniaCustomStateProperties<{ user: user; token: string; loginTime: number }>) => string; getLoginTime: (state: { user: { id: number; uid: number; password: string | null; name: string; mail: string; expire: string | null; disabled: number }; token: string; loginTime: number } & PiniaCustomStateProperties<{ user: user; token: string; loginTime: number }>) => number; login: (state: { user: { id: number; uid: number; password: string | null; name: string; mail: string; expire: string | null; disabled: number }; token: string; loginTime: number } & PiniaCustomStateProperties<{ user: user; token: string; loginTime: number }>) => boolean }, { setUser(user: user): void; setToken(token: string): void; setLoginTime(loginTime: number): void }> | null = null
-
+let user: any = null
 const subtitle: string = "常熟理工学院实验室管理系统"
+
+// 引入路由
+import routes from '@/routes'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -18,17 +19,7 @@ const router = createRouter({
       meta: {
         title: '控制台'
       },
-      children: [
-        {
-          path: '/console/user',
-          name: 'user',
-          component: () =>
-            import('@/views/console/user/UserManage.vue'),
-          meta: {
-            title: '用户管理'
-          }
-        }
-      ]
+      children: routes
     },
     {
       path: '/login',
@@ -66,7 +57,7 @@ router.beforeEach((to, from, next) => {
   if (to.meta.title && typeof to.meta.title === 'string') {
     document.title = to.meta.title + ' - ' + subtitle
   }
-  if (to.name !== 'login' && !user.login) {
+  if (to.name !== 'login' && !user.login && user) {
     window.$notify.error({
       title: "未登录",
       content: "请先登录",
