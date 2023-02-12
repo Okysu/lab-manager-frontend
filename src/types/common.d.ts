@@ -38,3 +38,24 @@ type menu = {
     rid: number, // 角色主键
     menu: string,
 }
+
+// 日志类型
+type log = {
+    id: number,
+    uid: number,
+    ip: string,
+    time: string,
+    url: string,
+    method: string,
+    status: string,
+}
+
+// 路由类型
+type route = {
+    path: string,
+    name: string,
+    component: () => Promise<any>,
+    meta: {
+        title: string
+    }
+}

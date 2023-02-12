@@ -34,7 +34,16 @@ const routes = [
         meta: {
             title: '菜单管理'
         }
+    },
+    {
+        path: '/console/log',
+        name: 'log',
+        component: () =>
+            import('@/views/console/log/LogManage.vue'),
+        meta: {
+            title: '日志管理'
+        }
     }
-]
+] as route[]
 
 export default routes

@@ -160,6 +160,7 @@ const columns = [
 const addMode = ref(false)
 const showModal = ref(false)
 const tableData = ref<user[]>([])
+const total = ref(0)
 const paginationReactive = reactive({
     page: 1,
     pageSize: 10,
@@ -174,7 +175,6 @@ const paginationReactive = reactive({
         paginationReactive.pageSize = pageSize
         paginationReactive.page = 1
         getUserList()
-        paginationReactive.pageCount = Math.ceil(tableData.value.length / pageSize)
     }
 })
 const getUserList = async () => {
@@ -182,8 +182,10 @@ const getUserList = async () => {
         page: paginationReactive.page,
         size: paginationReactive.pageSize
     })
-    const data = res.data.data
+    const data = res.data.data.users
     tableData.value = data
+    total.value = res.data.data.count
+    paginationReactive.pageCount = Math.ceil(total.value / paginationReactive.pageSize)
 }
 const role = ref<role[]>([])
 const roleOptions = [] as Array<{ label: string, value: number }>
@@ -331,7 +333,7 @@ const enter = async () => {
         <n-button color="#8a2be2" @click="getExcel(true)">导出所有用户</n-button>
     </n-space>
     <n-data-table :data="tableData" :columns="columns" style="margin-top: 10px;" :pagination="paginationReactive" remote
-        height="calc(100vh - 380px)" />
+        max-height="calc(100vh - 380px)" />
     <n-modal v-model:show="showModal" transform-origin="center">
         <n-card style="max-width: 700px;" :title="addMode ? '新增用户数据' : '修改用户数据'" :bordered="false" size="huge"
             role="dialog" aria-modal="true">
