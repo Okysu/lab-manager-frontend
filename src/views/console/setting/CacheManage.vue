@@ -209,7 +209,7 @@ const set = async () => {
         </template>
     </n-page-header>
     <n-data-table ref="table" :columns="columns" :data="data" max-height="calc(100vh - 400px)"
-        :row-key="(rows: record) => rows.key" :pagination="pagination" remote />
+        :row-key="(rows: record) => rows.key" :pagination="pagination" />
     <!-- 这是修改的模态框 -->
     <n-modal v-model:show="showModal" transform-origin="center">
         <n-card style="max-width: 400px;" title="修改缓存" :bordered="false" size="huge" role="dialog" aria-modal="true">
