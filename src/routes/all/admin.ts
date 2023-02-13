@@ -1,7 +1,7 @@
 const routes = [
     {
-        path: '/console/user',
-        name: 'user',
+        path: '/console/admin/user',
+        name: 'admin-user',
         component: () =>
             import('@/views/console/user/UserManage.vue'),
         meta: {
@@ -9,8 +9,8 @@ const routes = [
         }
     },
     {
-        path: '/console/info',
-        name: 'info',
+        path: '/console/admin/info',
+        name: 'admin-info',
         component: () =>
             import('@/views/console/setting/InfoSetting.vue'),
         meta: {
@@ -18,8 +18,8 @@ const routes = [
         }
     },
     {
-        path: '/console/cache',
-        name: 'cache',
+        path: '/console/admin/cache',
+        name: 'admin-cache',
         component: () =>
             import('@/views/console/setting/CacheManage.vue'),
         meta: {
@@ -27,8 +27,8 @@ const routes = [
         }
     },
     {
-        path: '/console/menu',
-        name: 'menu',
+        path: '/console/admin/menu',
+        name: 'admin-menu',
         component: () =>
             import('@/views/console/menu/MenuManage.vue'),
         meta: {
@@ -36,14 +36,14 @@ const routes = [
         }
     },
     {
-        path: '/console/log',
-        name: 'log',
+        path: '/console/admin/log',
+        name: 'admin-log',
         component: () =>
             import('@/views/console/log/LogManage.vue'),
         meta: {
             title: '日志管理'
         }
-    }
+    },
 ] as route[]
 
 export default routes

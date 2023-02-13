@@ -72,7 +72,10 @@ const setActive = async (role: role) => {
     )
 }
 const testMenu = (value: string) => {
-    window.$message.success("它将前往的路由是/consoel/" + value)
+    window.$message.success("它将前往的路由是/console/" + active.value.name.toLowerCase() + "/" + value)
+}
+const testDesignMenu = (value: string) => {
+    window.$message.success("它将前往的路由是/console/" + value.replace("-", "/"))
 }
 interface design {
     id?: number
@@ -128,6 +131,8 @@ const remoteToDesign = (remote: remote[]): design[] => {
     remote.forEach(item => {
         // 如果有children，那么就使用相同id push进去
         if (item.children) {
+            // 删除key的前缀
+            item.key = item.key!.replace(active.value.name.toLowerCase() + "-", "")
             result.push({
                 id: id,
                 label: item.label,
@@ -135,6 +140,8 @@ const remoteToDesign = (remote: remote[]): design[] => {
                 icon: item.icon,
             })
             item.children.forEach(child => {
+                // 删除key的前缀
+                child.key = child.key!.replace(active.value.name.toLowerCase() + "-", "")
                 result.push({
                     id: id,
                     label: child.label,
@@ -144,6 +151,8 @@ const remoteToDesign = (remote: remote[]): design[] => {
             })
             id++
         } else {
+            // 删除key的前缀
+            item.key = item.key!.replace(active.value.name.toLowerCase() + "-", "")
             result.push({
                 id: id++,
                 label: item.label,
@@ -162,6 +171,8 @@ const mergeDesigns = (designs: design[]): design[] => {
     origin.forEach(design => {
         if (map.has(design.id!)) {
             const item = map.get(design.id!)
+            // 给key加上前缀
+            design.key = active.value.name.toLowerCase() + "-" + design.key
             if (item!.children) {
                 item!.children.push(design)
             } else {
@@ -169,6 +180,8 @@ const mergeDesigns = (designs: design[]): design[] => {
             }
         } else {
             map.set(design.id!, design)
+            // 给key加上前缀
+            design.key = active.value.name.toLowerCase() + "-" + design.key
             result.push(design)
         }
     })
@@ -290,7 +303,7 @@ const save = async () => {
                     </div>
                 </template>
             </n-dynamic-input>
-            <n-menu :options="previewDesign" @update:value="testMenu" />
+            <n-menu :options="previewDesign" @update:value="testDesignMenu" />
         </n-card>
     </n-modal>
 </template>

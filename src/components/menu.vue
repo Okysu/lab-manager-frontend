@@ -18,8 +18,8 @@ import request from "@/tools/request"
 const config = appConfig()
 const router = useRouter()
 const route = useRoute()
-// url取最后一个/后面的内容
-const url = route.path.split("/").pop() as string
+// url取去除/console/的部分，将剩下的/替换为-
+const url = route.path.replace("/console/", "").replace(/\//g, "-")
 const value = ref(url)
 const update = (v: string) => {
     value.value = v
