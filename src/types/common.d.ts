@@ -59,3 +59,24 @@ type route = {
         title: string
     }
 }
+
+// 基础用户类型
+type baseUser = {
+    id: number,
+    uid: number,
+    name: string,
+}
+
+// 项目类型
+type project = {
+    id: number,
+    pid: number,
+    uid: number,
+    name: string,
+    description: string,
+    guide: number,
+    file: string, // 申报书url
+    status: number,
+    guideUser: baseUser,
+    user: baseUser,
+}
