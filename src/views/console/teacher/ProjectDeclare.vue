@@ -21,7 +21,7 @@ const getProjects = async () => {
 }
 
 // 批准为校级项目
-const start = async () => {
+const start1 = async () => {
     window.$dialog.warning(
         {
             title: '批准',
@@ -30,7 +30,57 @@ const start = async () => {
             negativeText: '取消',
             transformOrigin: "center",
             onPositiveClick: async () => {
-                const res = await request.post("/project/start", {
+                const res = await request.post("/project/start1", {
+                    id: active.value?.id
+                })
+                const data = res.data
+                if (data.code === 200) {
+                    window.$message.success("批准成功")
+                    getProjects()
+                } else {
+                    window.$message.error("批准失败")
+                }
+            },
+        }
+    )
+}
+
+//批准为省级项目
+const start2 = async()=> {
+    window.$dialog.warning(
+        {
+            title:'删除',
+            content: `确定要批准${active.value?.name}为省级项目吗？`,
+            positiveText: '确定',
+            negativeText: '取消',
+            transformOrigin: "center",
+            onPositiveClick: async () => {
+                const res = await request.post("/project/start2", {
+                    id: active.value?.id
+                })
+                const data = res.data
+                if (data.code === 200) {
+                    window.$message.success("批准成功")
+                    getProjects()
+                } else {
+                    window.$message.error("批准失败")
+                }
+            },
+        }
+    )
+}
+
+//批准为国家级项目
+const start3 = async()=> {
+    window.$dialog.warning(
+        {
+            title:'删除',
+            content: `确定要批准${active.value?.name}为国级项目吗？`,
+            positiveText: '确定',
+            negativeText: '取消',
+            transformOrigin: "center",
+            onPositiveClick: async () => {
+                const res = await request.post("/project/start3", {
                     id: active.value?.id
                 })
                 const data = res.data
@@ -102,7 +152,11 @@ onMounted(() => {
                     <a href="#" style="text-decoration: none; color: inherit">预览</a>
                 </template>
                 <template #extra>
-                    <n-button v-if="active?.status === 0" @click="start">批准为校级项目</n-button>
+                    <n-space>
+                        <n-button v-if="active?.status === 0" @click="start1">批准为校级项目</n-button>
+                        <n-button v-if="active?.status === 1" @click="start2">批准为省级项目</n-button>
+                        <n-button v-if="active?.status === 2" @click="start3">批准为国级项目</n-button>
+                    </n-space>
                 </template>
             </n-page-header>
             <n-card style="margin-top: 5px;">
