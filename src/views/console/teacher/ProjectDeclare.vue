@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import sha1 from 'sha1'
 import request from '@/tools/request'
 // 引入config
@@ -46,10 +46,10 @@ const start1 = async () => {
 }
 
 //批准为省级项目
-const start2 = async()=> {
+const start2 = async () => {
     window.$dialog.warning(
         {
-            title:'删除',
+            title: '删除',
             content: `确定要批准${active.value?.name}为省级项目吗？`,
             positiveText: '确定',
             negativeText: '取消',
@@ -71,10 +71,10 @@ const start2 = async()=> {
 }
 
 //批准为国家级项目
-const start3 = async()=> {
+const start3 = async () => {
     window.$dialog.warning(
         {
-            title:'删除',
+            title: '删除',
             content: `确定要批准${active.value?.name}为国级项目吗？`,
             positiveText: '确定',
             negativeText: '取消',
@@ -100,6 +100,17 @@ const setActive = (project: project) => {
     active.value = project
 }
 
+// filter 
+const statusFilter = ref(-1)
+
+const listFilter = computed(() => {
+    if (statusFilter.value === -1) {
+        return projects.value
+    } else {
+        return projects.value.filter((item) => item.status === statusFilter.value)
+    }
+})
+
 onMounted(() => {
     getProjects()
 })
@@ -119,16 +130,19 @@ onMounted(() => {
     <n-page-header subtitle="这是廉价劳动力的开始">
         <n-grid :cols="4">
             <n-gi>
-                <n-statistic label="所有项目" :value="projects.length" />
+                <n-statistic @click="statusFilter = -1" label="所有项目" :value="projects.length" />  
             </n-gi>
             <n-gi>
-                <n-statistic label="校级项目" :value="projects.filter((item) => item.status === 1).length" />
+                <n-statistic @click="statusFilter = 1" label="校级项目"
+                    :value="projects.filter((item) => item.status === 1).length" />
             </n-gi>
             <n-gi>
-                <n-statistic label="省级项目" :value="projects.filter((item) => item.status === 2).length" />
+                <n-statistic @click="statusFilter = 2" label="省级项目"
+                    :value="projects.filter((item) => item.status === 2).length" />
             </n-gi>
             <n-gi>
-                <n-statistic label="国级项目" :value="projects.filter((item) => item.status === 3).length" />
+                <n-statistic @click="statusFilter = 3" label="国级项目"
+                    :value="projects.filter((item) => item.status === 3).length" />
             </n-gi>
         </n-grid>
         <template #title>
@@ -138,7 +152,7 @@ onMounted(() => {
     <n-grid :cols="2" style="margin-top: 10px;" x-gap="12" y-gap="12">
         <n-gi>
             <n-grid :cols="config.isMobile ? 1 : 2" x-gap="10" y-gap="10" class="scoped">
-                <n-gi v-for="project in projects">
+                <n-gi v-for="project in listFilter">
                     <n-card :title="project.name" :class="active?.id === project.id ? 'active' : ''"
                         @click="setActive(project)">
                         {{ project.description }}
@@ -176,7 +190,7 @@ onMounted(() => {
                     <n-list-item>
                         <n-thing title="项目状态" />
                         {{ active?.status === 0 ? '未审核' : active?.status === 1 ? '校级' : active?.status === 2 ? '省级' :
-                        '国级' }}
+                            '国级' }}
                     </n-list-item>
                     <n-list-item>
                         <n-thing title="项目负责人" />
