@@ -21,6 +21,25 @@ const col = [
     title: "项目名称",
   },
   {
+    key: "user",
+    title: "申报人",
+    render: (row: project) => {
+      return h("span", {}, `${row.user.name}[${row.user.uid}]`/*row.user.name+"["+row.user.uid+"]"*/)
+
+    }
+  },
+  {
+    key: "guideuser",
+    title: "指导老师",
+    render: (row: project) => {
+      return h("span", {}, row.guideUser.name + "[" + row.guideUser.uid + "]")
+    }
+  },
+  {
+    key: "description",
+    title: "介绍",
+  },
+  {
     key: "status",
     title: "项目状态",
     width: 150,
@@ -141,8 +160,8 @@ onMounted(() => {
     </template>
   </n-page-header>
   <!-- <n-space>
-                      <n-input v-model:value="searchValue" type="text" placeholder="模糊搜索" />
-                    </n-space> -->
+                              <n-input v-model:value="searchValue" type="text" placeholder="模糊搜索" />
+                            </n-space> -->
   <n-data-table style="margin-top: 10px;" :columns="col" :data="projectsList" />
 </template>  
   
