@@ -70,7 +70,7 @@ type baseUser = {
 // 项目类型
 type project = {
     id: number,
-    pid: number,
+    pid: string,
     uid: number,
     name: string,
     description: string,
@@ -79,6 +79,7 @@ type project = {
     status: number,
     guideUser: baseUser,
     user: baseUser,
+    delFlag: number,
 }
 //赛事信息
 type contest={
