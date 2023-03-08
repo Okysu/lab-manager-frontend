@@ -14,7 +14,15 @@ const routes = [
         meta: {
             title: '项目管理',
         },
-    }
+    },
+    {
+        path: '/console/teacher/preview',
+        name:'teacher-preview',
+        component: () => import("@/views/console/teacher/ContestPreview.vue"),
+        meta: {
+            title: '项目管理',
+        },
+    },
 ] as route[]
 
 export default routes
