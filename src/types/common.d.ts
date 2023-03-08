@@ -80,3 +80,12 @@ type project = {
     guideUser: baseUser,
     user: baseUser,
 }
+//赛事信息
+type contest={
+    id:number,
+    title:string,
+    content:string,
+    date:date,
+    author:string,
+    file:string,//上传文件
+}
