@@ -1,7 +1,9 @@
 <script lang="ts" setup>
-import { ref, onMounted, h, computed } from 'vue'
+import { ref, onMounted,reactive, h, computed } from 'vue'
 import request from '@/tools/request'
 import { NButton, NSpace } from 'naive-ui'
+import type { FormInst } from 'naive-ui'
+import { add } from 'lodash';
 const projects = ref<project[]>([])
 const getProjects = async () => {
   const response = await request.post("/project/get", { filter: false })
@@ -9,16 +11,31 @@ const getProjects = async () => {
     projects.value = response.data.data
   }
 }
+//tc
+const addMode = ref(false)
+const showModal = ref(false)
 // 表格的表头
 const col = [
   {
     key: "pid",
     title: "项目编号",
-    width: 150
+    /*width: 150*/
   },
   {
     key: "name",
     title: "项目名称",
+  },
+  {
+    key: "status",
+    title: "项目类型",
+    render: (row: project) => {
+      if (row.status === 1)
+        return h("span", {}, "校级项目")
+      if (row.status === 2)
+        return h("span", {}, "省级项目")
+      if (row.status === 3)
+        return h("span", {}, "国家级项目")
+    }
   },
   {
     key: "user",
@@ -80,12 +97,12 @@ const col = [
         value: 4
       }
     ],
-    filter(value: number, row: project) {
-      if (value !== 4)
-        return row.status === value && row.delFlag === 0
-      else
-        return row.delFlag === 1
-    }
+    // filter(value: number, row: project) {
+    //   if (value !== 4)
+    //     return row.status === value && row.delFlag === 0
+    //   else
+    //     return row.delFlag === 1
+    // }
   },
   {
     key: "actions",
@@ -98,7 +115,7 @@ const col = [
           strong: true,
           tertiary: true,
           onClick: async () => {
-            const res = await request.post("/project/del", {
+            const res = await request.post("/project/delete", {
               id: row.id,
               delFlag: row.delFlag === 1 ? 0 : 1
             })
@@ -112,11 +129,107 @@ const col = [
         },
         { default: () => row.delFlag === 1 ? "恢复" : "删除" }
       )
-      const space = h(NSpace, {}, { default: () => [del] })
+      const edit =h(
+        NButton,
+        {
+          strong: true,
+          tertiary: true,
+          onClick:async () => {
+            addMode.value=false
+            showModal.value = true
+            formValue.name=row.name 
+            formValue.status=String(row.status)
+            formValue.uid= String(row.uid)
+            formValue.guide=String(row.guide)
+          }
+        },
+        { default: () => '编辑' }
+      )
+      const space = h(NSpace, {}, { default: () => [edit,del] })
       return space
     }
   }
 ]
+
+//定义一个formValue,参照rules
+
+const formValue = reactive({
+  id:"",
+  pid:"",
+  name: "",
+  status:"", 
+  applyer: "",
+  uid:"",
+  guide:"",
+  description: ""
+})
+
+//定义rules
+const rules = {
+  name: {
+    required: true,
+    message: '请输入项目名称',
+    trigger: 'blur'
+  },
+  type: {
+    required: true,   //必填项
+    type: 'number',    //类型为数字
+    message: '请选择项目类型',
+    trigger: 'blur'
+  },
+  applyer: {
+    required: true,
+    message: '请输入申报人学工号',
+    trigger: ['input', 'blur']
+  },
+  guide: {
+    required: true,
+    message: '请输入指导老师学工号',
+    trigger: ['input', 'blur']
+  },
+  description: {
+    required: true,
+    message: '请输入项目介绍',
+    trigger: ['input']
+  }
+}
+
+
+const value = ref(null)
+
+const options = [
+  { label: '校级项目', value: '1' },
+  { label: '省级项目', value: '2' },
+  { label: '国家级项目', value: '3' }
+]
+
+const formRef = ref<FormInst | null>(null)
+
+//添加项目按钮de响应事件
+const handleClick = async(e: MouseEvent) => {
+  e.preventDefault()
+  var data = {
+    id: formValue.id,
+    pid:formValue.pid,
+    name: formValue.name,
+    status:formValue.status, 
+    applyer: formValue.applyer,
+    uid:formValue.uid,
+    guide:formValue.guide,
+    description: formValue.description
+  }
+  const res = await request.post('/project/' + (addMode.value ? 'start' : 'update'),addMode.value ? data : { ...data, id: formValue.id})
+  formRef.value?.validate((error) => {
+    if (!error) {
+      window.$message.success("OK")
+      showModal.value=false
+      getProjects()
+      return
+    }
+    window.$message.error("error") //挂在window对象如果输入错误
+  })
+  
+}
 
 // 搜索框
 const searchValue = ref<string>("")
@@ -133,6 +246,8 @@ onMounted(() => {
   getProjects()
 })
 </script>
+
+
 <template>
   <n-page-header subtitle="无论谁都犯过错不是么？">
     <n-grid :cols="5">
@@ -159,10 +274,45 @@ onMounted(() => {
       <n-input v-model:value="searchValue" type="text" placeholder="根据项目编号或项目名称搜索" />
     </template>
   </n-page-header>
+
+  <n-space>
+    <n-button type="primary" @click="addMode = true, showModal = true">添加项目</n-button>
+  </n-space>
+
   <!-- <n-space>
-                              <n-input v-model:value="searchValue" type="text" placeholder="模糊搜索" />
-                            </n-space> -->
+                                                <n-input v-model:value="searchValue" type="text" placeholder="模糊搜索" />
+                                              </n-space> -->
+                                              
   <n-data-table style="margin-top: 10px;" :columns="col" :data="projectsList" />
+  <n-modal v-model:show="showModal">
+    <n-card style="max-width: 700px;" :title="addMode ? '添加项目' : '修改项目'" :bordered="false" size="huge" role="dialog"
+      aria-modal="true">
+      <n-form :model="formValue" :formRules="rules" :label-width="80" ref="formRef">
+        <n-form-item label="项目名称" path="name">
+          <n-input v-model:value="formValue.name" placeholder="项目名称" />
+        </n-form-item>
+        <n-form-item label="项目类型" path="type" placeholder="请选择项目类型">
+          <!-- <n-select v-model:value="formValue.type" /> -->
+          <n-select v-model:value="formValue.status" :options="options" />
+          <!-- <n-select v-model:value="value" :options="options" /> -->
+        </n-form-item>
+        <n-form-item label="申报人学工号" path="applyer">
+          <n-input v-model:value="formValue.uid" placeholder="项目申报人学号" />
+        </n-form-item>
+        <n-form-item label="指导老师学工号" path="guide" placeholder="项目指导老师工号">
+          <n-input v-model:value="formValue.guide" />
+        </n-form-item>
+        <n-form-item label="项目介绍" path="description"  placeholder="在这里写点对你的项目的简介">
+          <n-input v-model:value="formValue.description" />
+        </n-form-item>
+      </n-form>
+      <template #footer>
+        <n-space style="float: right;">
+          <n-button type="primary" @click="handleClick">确定</n-button>
+        </n-space>
+      </template>
+    </n-card>
+  </n-modal>
 </template>  
   
 

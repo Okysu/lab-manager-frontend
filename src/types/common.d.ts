@@ -90,3 +90,8 @@ type contest={
     author:string,
     file:string,//上传文件
 }
+//实验室信息
+type lab={
+    name:string,
+    teacher:string,
+}
