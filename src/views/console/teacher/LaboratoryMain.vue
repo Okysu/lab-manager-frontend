@@ -4,9 +4,9 @@ import request from '@/tools/request'
 import { NButton, NSpace } from 'naive-ui'
 import type { FormInst } from 'naive-ui'
 const showModal = ref(false)
-const formValue =reactive({
-    name:'',
-    teacher:'',
+const formValue = reactive({
+    name: '',
+    teacher: '',
 })
 const formRef = ref<FormInst>()
 const lab = ref<lab[]>([])
@@ -19,32 +19,32 @@ const getLabs = async () => {
 
 //添加实验室信息的响应事件
 const enter = async () => {
-    var data ={
+    var data = {
         name: formValue.name,
         teacher: formValue.teacher,
     }
 }
 
 //表格的表头（列信息）
-const col =[
+const col = [
     {
-        key:"name",
-        title:"实验室名称",
-        width:230
+        key: "name",
+        title: "实验室名称",
+        width: 230
     },
     {
-        key:"teacher",
-        title:"指导老师",
-        width:250
+        key: "teacher",
+        title: "指导老师",
+        width: 250
     }
 ]
 
 //搜索框
 const searchValue = ref<string>("")
 const lablist = computed(() => {
-    if(searchValue.value !== "")
-        return lab.value.filter((item) => item.name.includes(searchValue.value) || item.teacher.includes(searchValue.value)) 
-    else 
+    if (searchValue.value !== "")
+        return lab.value.filter((item) => item.name.includes(searchValue.value) || item.teacher.includes(searchValue.value))
+    else
         return lab.value
 })
 onMounted(() => {

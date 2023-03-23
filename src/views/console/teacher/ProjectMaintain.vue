@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { ref, onMounted,reactive, h, computed } from 'vue'
+import { ref, onMounted, reactive, h, computed } from 'vue'
 import request from '@/tools/request'
 import { NButton, NSpace } from 'naive-ui'
 import type { FormInst } from 'naive-ui'
-import { add } from 'lodash';
+// import { add } from 'lodash';
 const projects = ref<project[]>([])
 const getProjects = async () => {
   const response = await request.post("/project/get", { filter: false })
@@ -129,23 +129,25 @@ const col = [
         },
         { default: () => row.delFlag === 1 ? "恢复" : "删除" }
       )
-      const edit =h(
+      const edit = h(
         NButton,
         {
           strong: true,
           tertiary: true,
-          onClick:async () => {
-            addMode.value=false
+          onClick: async () => {
+            addMode.value = false
             showModal.value = true
-            formValue.name=row.name 
-            formValue.status=String(row.status)
-            formValue.uid= String(row.uid)
-            formValue.guide=String(row.guide)
+            formValue.id = String(row.id)
+            formValue.name = row.name
+            formValue.status = String(row.status)
+            formValue.uid = String(row.uid)
+            formValue.guide = String(row.guide)
+            formValue.description = row.description
           }
         },
         { default: () => '编辑' }
       )
-      const space = h(NSpace, {}, { default: () => [edit,del] })
+      const space = h(NSpace, {}, { default: () => [edit, del] })
       return space
     }
   }
@@ -154,13 +156,12 @@ const col = [
 //定义一个formValue,参照rules
 
 const formValue = reactive({
-  id:"",
-  pid:"",
+  id: "",
   name: "",
-  status:"", 
+  status: "",
   applyer: "",
-  uid:"",
-  guide:"",
+  uid: "",
+  guide: "",
   description: ""
 })
 
@@ -206,29 +207,28 @@ const options = [
 const formRef = ref<FormInst | null>(null)
 
 //添加项目按钮de响应事件
-const handleClick = async(e: MouseEvent) => {
+const handleClick = async (e: MouseEvent) => {
   e.preventDefault()
   var data = {
     id: formValue.id,
-    pid:formValue.pid,
     name: formValue.name,
-    status:formValue.status, 
+    status: formValue.status,
     applyer: formValue.applyer,
-    uid:formValue.uid,
-    guide:formValue.guide,
+    uid: formValue.uid,
+    guide: formValue.guide,
     description: formValue.description
   }
-  const res = await request.post('/project/' + (addMode.value ? 'start' : 'update'),addMode.value ? data : { ...data, id: formValue.id})
+  const res = await request.post('/project/' + (addMode.value ? 'start' : 'update'), addMode.value ? data : { ...data, id: formValue.id })
   formRef.value?.validate((error) => {
     if (!error) {
       window.$message.success("OK")
-      showModal.value=false
+      showModal.value = false
       getProjects()
       return
     }
     window.$message.error("error") //挂在window对象如果输入错误
   })
-  
+
 }
 
 // 搜索框
@@ -280,9 +280,9 @@ onMounted(() => {
   </n-space>
 
   <!-- <n-space>
-                                                <n-input v-model:value="searchValue" type="text" placeholder="模糊搜索" />
-                                              </n-space> -->
-                                              
+                                                  <n-input v-model:value="searchValue" type="text" placeholder="模糊搜索" />
+                                                </n-space> -->
+
   <n-data-table style="margin-top: 10px;" :columns="col" :data="projectsList" />
   <n-modal v-model:show="showModal">
     <n-card style="max-width: 700px;" :title="addMode ? '添加项目' : '修改项目'" :bordered="false" size="huge" role="dialog"
@@ -302,7 +302,7 @@ onMounted(() => {
         <n-form-item label="指导老师学工号" path="guide" placeholder="项目指导老师工号">
           <n-input v-model:value="formValue.guide" />
         </n-form-item>
-        <n-form-item label="项目介绍" path="description"  placeholder="在这里写点对你的项目的简介">
+        <n-form-item label="项目介绍" path="description" placeholder="在这里写点对你的项目的简介">
           <n-input v-model:value="formValue.description" />
         </n-form-item>
       </n-form>
