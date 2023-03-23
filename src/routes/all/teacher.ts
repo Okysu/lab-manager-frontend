@@ -20,7 +20,15 @@ const routes = [
         name:'teacher-preview',
         component: () => import("@/views/console/teacher/ContestPreview.vue"),
         meta: {
-            title: '项目管理',
+            title: '赛事预告',
+        },
+    },
+    {
+        path: '/console/teacher/LabMain',
+        name:'teacher-lab',
+        component: () => import("@/views/console/teacher/LaboratoryMain.vue"),
+        meta: {
+            title: '实验室管理',
         },
     },
 ] as route[]
