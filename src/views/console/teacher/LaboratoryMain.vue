@@ -7,6 +7,7 @@ const showModal = ref(false)
 const formValue = reactive({
     name: '',
     teacher: '',
+    
 })
 const formRef = ref<FormInst>()
 const lab = ref<lab[]>([])
