@@ -1,0 +1,72 @@
+.invocation-page {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+.invocation-page .left {
+  flex: 1 1;
+}
+.invocation-page .left .title {
+  border-bottom: 1px solid #e7e5e2;
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+.invocation-page .left .contest-area {
+  margin-top: 15px;
+}
+.invocation-page .left .contest-area .caption::before {
+  content: '\f0a4\00a0';
+  font-family: FontAwesome;
+  display: inline-block;
+}
+.invocation-page .left .contest-area .contest_detail {
+  margin-top: 5px;
+  font-size: 12px;
+  text-indent: 2em;
+  line-height: 1.25rem;
+}
+.invocation-page .left .contest-area .contest_detail table {
+  border: 1px solid black;
+  border-collapse: collapse;
+  width: 90%;
+  text-align: center;
+}
+.invocation-page .left .contest-area .contest_detail table th,
+.invocation-page .left .contest-area .contest_detail table td {
+  border: 1px solid black;
+}
+.invocation-page .left .contest-area .contest_detail table thead {
+  background-color: #a2cdf7;
+}
+.invocation-page .left .contest-area .contest_detail table tbody tr:nth-child(odd) {
+  background-color: #f4f6f8;
+}
+.invocation-page .left .contest-area .contest_detail table tbody tr:nth-child(even) {
+  background-color: #d3e6f8;
+}
+.invocation-page .right {
+  flex: 0 0 300px;
+  font-size: 14px;
+  margin-left: 15px;
+  border: 1px solid #e7e5e2;
+}
+.invocation-page .right > div {
+  border-bottom: 1px solid #e7e5e2;
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+.invocation-page .right ul {
+  list-style: none;
+  margin-top: 10px;
+}
+.invocation-page .right ul li {
+  padding-left: 5px;
+  list-style: none;
+  line-height: 2em;
+  margin-top: 8px;
+}
+@media only screen and (max-width: 768px) {
+  .invocation-page {
+    flex-direction: column;
+  }
+}
