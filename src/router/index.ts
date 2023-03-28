@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import ConsoleView from '@/views/ConsoleView.vue'
+import HomeView from '@/views/HomePage.vue'
+import LabView from '@/views/home/LabInfo.vue'
 
 // 引入userCommon
 import { userCommon } from '@/stores/user'
@@ -12,6 +14,23 @@ import routes from '@/routes'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    {
+      path: "/",
+      name: "index",
+      component: HomeView,
+      meta: {
+        title: '主页',
+      },
+    },
+    {
+      path:'/lab',
+      name:'lab',
+      component:LabView,
+      meta:{
+        title:'实验室'
+      },
+
+    },
     {
       path: '/console',
       name: 'console',
@@ -57,14 +76,13 @@ router.beforeEach((to, from, next) => {
   if (to.meta.title && typeof to.meta.title === 'string') {
     document.title = to.meta.title + ' - ' + subtitle
   }
-  if (to.name !== 'login' && !user.login && user) {
+  if (!import.meta.env.DEV && to.name !== 'login' && !user.login && user) {
     window.$notify.error({
       title: "未登录",
       content: "请先登录",
       duration: 2000
     })
     user.setLoginTime(0)
-    next({ name: 'login' })
   }
   next()
 })

@@ -1,0 +1,65 @@
+.contest-page {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  .left {
+    flex: 1 1;
+    .title {
+      border-bottom: 1px solid rgb(231, 229, 226);
+      font-size: 1.5rem;
+      line-height: 2rem;
+    }
+    .contest-area {
+      margin-top: 15px;
+      // border: 1px solid rgb(231, 229, 226);
+      // border-bottom: 1px solid rgb(231, 229, 226);
+      .caption::before {
+        // border-bottom: 1px solid rgb(231, 229, 226);
+        content: '\f0a4\00a0';
+        font-family: FontAwesome;
+        display: inline-block;
+      }
+      .contest_detail {
+        margin-top: 5px;
+        font-size: 12px;
+        text-indent: 2em;
+        line-height: 1.25rem;
+      }
+    }
+  }
+  .right {
+    flex: 0 0 300px;
+    font-size: 14px;
+    margin-left: 15px;
+    border: 1px solid rgb(231, 229, 226);
+    > div {
+      border-bottom: 1px solid rgb(231, 229, 226);
+      font-size: 1.5rem;
+      line-height: 2rem;
+    }
+    ul {
+      list-style: none;
+      margin-top: 10px;
+      li {
+        padding-left: 5px;
+        list-style: none;
+        line-height: 2em;
+      }
+      li::before {
+        content: '\f11d\00a0';
+        font-family: FontAwesome;
+        display: inline-block;
+      }
+    }
+  }
+}
+
+
+@media only screen and (max-width: 768px) {
+    .contest-page {
+        flex-direction: column-reverse;
+        .right{
+          display: none;
+        }
+    }
+}

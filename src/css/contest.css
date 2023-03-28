@@ -1,0 +1,57 @@
+.contest-page {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+.contest-page .left {
+  flex: 1 1;
+}
+.contest-page .left .title {
+  border-bottom: 1px solid #e7e5e2;
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+.contest-page .left .contest-area {
+  margin-top: 15px;
+}
+.contest-page .left .contest-area .caption::before {
+  content: '\f0a4\00a0';
+  font-family: FontAwesome;
+  display: inline-block;
+}
+.contest-page .left .contest-area .contest_detail {
+  margin-top: 5px;
+  font-size: 12px;
+  text-indent: 2em;
+  line-height: 1.25rem;
+}
+.contest-page .right {
+  flex: 0 0 300px;
+  font-size: 14px;
+  margin-left: 15px;
+  border: 1px solid #e7e5e2;
+}
+.contest-page .right > div {
+  border-bottom: 1px solid #e7e5e2;
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+.contest-page .right ul {
+  list-style: none;
+  margin-top: 10px;
+}
+.contest-page .right ul li {
+  padding-left: 5px;
+  list-style: none;
+  line-height: 2em;
+}
+.contest-page .right ul li::before {
+  content: '\f11d\00a0';
+  font-family: FontAwesome;
+  display: inline-block;
+}
+@media only screen and (max-width: 768px) {
+  .contest-page {
+    flex-direction: column-reverse;
+  }
+}
